@@ -1,0 +1,1258 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0f0a1a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Reading Comprehension Menengah — QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f8f7f4;
+            --surface: #ffffff;
+            --surface2: #f1f0ea;
+            --border: #e8e6dd;
+            --text: #1c1a17;
+            --text2: #5c5848;
+            --text3: #9c9880;
+            --ink: #1c1a17;
+            --accent: #b45309;
+            --accent-mid: #d97706;
+            --accent-light: #fef3c7;
+            --accent-glow: rgba(180, 83, 9, 0.1);
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --indigo: #3730a3;
+            --indigo-light: #e0e7ff;
+            --emerald: #065f46;
+            --emerald-light: #d1fae5;
+            --blue: #1a4e8a;
+            --blue-light: #dbeafe;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.09);
+        }
+
+        body.dark {
+            --bg: #100f0c;
+            --surface: #18170e;
+            --surface2: #211f14;
+            --border: #2c2a1e;
+            --text: #f2f0e8;
+            --text2: #a8a488;
+            --text3: #6a6650;
+            --ink: #f2f0e8;
+            --accent-light: rgba(180, 83, 9, 0.18);
+            --rose-light: rgba(159, 18, 57, 0.18);
+            --teal-light: rgba(15, 118, 110, 0.18);
+            --indigo-light: rgba(55, 48, 163, 0.18);
+            --emerald-light: rgba(6, 95, 70, 0.18);
+            --blue-light: rgba(26, 78, 138, 0.2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.4s, color 0.4s;
+            overflow-x: hidden;
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1;
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--rose));
+            z-index: 200;
+            transition: width 0.15s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text2);
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(180, 83, 9, 0.18);
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .body-text {
+            font-size: 0.97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* Reading passage */
+        .reading-passage {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .passage-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 14px;
+        }
+
+        .passage-tag.easy {
+            background: var(--emerald-light);
+            color: var(--emerald);
+        }
+
+        .passage-tag.medium {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .passage-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+
+        .passage-text {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: var(--text2);
+        }
+
+        .passage-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Questions */
+        .question-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .q-number {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .q-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .q-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .q-opt {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            font-size: 0.88rem;
+            color: var(--text2);
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-align: left;
+        }
+
+        .q-opt:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .q-opt.selected {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-light);
+            font-weight: 600;
+        }
+
+        .q-opt.correct-answer {
+            border-color: var(--emerald);
+            color: var(--emerald);
+            background: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        .q-opt.wrong-answer {
+            border-color: var(--rose);
+            color: var(--rose);
+            background: var(--rose-light);
+        }
+
+        .q-explanation {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--teal);
+            font-weight: 500;
+            display: none;
+            padding: 10px 14px;
+            background: var(--teal-light);
+            border-radius: 10px;
+        }
+
+        .q-explanation.show {
+            display: block;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            margin-top: 6px;
+        }
+
+        .sh-badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sh-badge.amber {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .sh-badge.teal {
+            background: var(--teal-light);
+            color: var(--teal);
+        }
+
+        .sh-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(180, 83, 9, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hl-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .hl-text strong {
+            font-weight: 700;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: 0.25s;
+            cursor: default;
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+
+        .mini-text {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text2);
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .check-btn {
+            margin-top: 14px;
+            padding: 10px 22px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .check-btn:hover {
+            background: var(--accent-mid);
+            transform: translateY(-1px);
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js"></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:12px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> › <span>Reading</span> › Menengah</div>
+            <div class="module-tag">📚 Reading — Menengah</div>
+            <h1>Reading Comprehension<br><em>Menengah</em></h1>
+            <p>Baca artikel dan berita, pelajari cara mengidentifikasi ide utama, detail penting, dan tone penulis.
+                Cocok untuk tingkat menengah!</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> 30 Artikel
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--rose)"></div> Analisis Mendalam
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--teal)"></div> 3 Jam Pelajaran
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+
+            <!-- 1. Strategi Membaca -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📖</div>
+                    <div>
+                        <div class="card-title">Strategi Membaca Efektif</div>
+                        <div class="card-subtitle">Cara memahami teks bahasa Inggris dengan cepat</div>
+                    </div>
+                </div>
+                <p class="body-text">Membaca teks bahasa Inggris bukan berarti harus menerjemahkan setiap kata. Dengan
+                    strategi yang tepat, kamu bisa <strong>memahami inti teks</strong> tanpa kamus.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">📚</div>
+                        <div class="mini-title">Main Idea</div>
+                        <div class="mini-text">Identifikasi <em>ide utama</em> artikel atau berita dengan memahami
+                            kalimat topik di setiap paragraf.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🎯</div>
+                        <div class="mini-title">Key Details</div>
+                        <div class="mini-text">Cari fakta penting pendukung argumen menggunakan teknik <em>scanning</em>
+                            tanpa membaca semua kata.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">📚</div>
+                        <div class="mini-title">Author's Tone</div>
+                        <div class="mini-text">Kenali <em>sikap penulis</em> (objektif, kritis, persuasif) dari
+                            pemilihan diksi di dalam teks.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">📝</div>
+                        <div class="mini-title">Inference</div>
+                        <div class="mini-text">Tarik <em>kesimpulan</em> logis yang tidak tertulis secara eksplisit
+                            dalam teks bacaan.</div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <div class="hl-icon">💡</div>
+                    <div class="hl-text"><strong>Pro tip:</strong> Baca pertanyaan DULU sebelum membaca teks. Ini
+                        membantu otakmu fokus mencari informasi yang dibutuhkan saat membaca.</div>
+                </div>
+            </div>
+
+            <!-- 2. Artikel 1 — The Rise of Artificial Intelligence -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📄</div>
+                    <div>
+                        <div class="card-title">Artikel 1: The Rise of Artificial Intelligence</div>
+                        <div class="card-subtitle">Berita tentang perkembangan teknologi</div>
+                    </div>
+                </div>
+                <div class="reading-passage">
+                    <span class="passage-tag medium">Medium</span>
+                    <div class="passage-title">The Rise of Artificial Intelligence</div>
+                    <div class="passage-text">
+                        Artificial Intelligence (AI) has rapidly transformed from a futuristic concept into a daily
+                        reality. Across various industries, AI systems are now handling complex tasks with unprecedented
+                        <strong>efficiency</strong>. For instance, in healthcare, machine learning algorithms can
+                        analyze medical images to detect diseases earlier than human doctors. This technological
+                        <strong>breakthrough</strong> has significantly improved patient outcomes.<br><br>
+                        However, the rapid adoption of AI is not without its challenges. There are growing concerns
+                        regarding <strong>job displacement</strong> as automated systems begin to replace human workers
+                        in manufacturing and customer service sectors. Furthermore, experts warn about the ethical
+                        implications of AI, particularly concerning data privacy and algorithmic bias.<br><br>
+                        Despite these concerns, most analysts agree that AI will continue to be a driving force in the
+                        global economy. The focus now is on <strong>regulating</strong> its development to ensure it
+                        benefits society as a whole while mitigating potential risks.
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge amber">Pertanyaan Pemahaman</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div id="quiz1">
+                    <div class="question-block" data-quiz="1" data-correct="1">
+                        <div class="q-number">Pertanyaan 1</div>
+                        <div class="q-text">What is the main idea of the passage?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,1,0)">A. AI is replacing human doctors in
+                                healthcare.</button>
+                            <button class="q-opt" onclick="checkReading(this,1,1)">B. The rapid development of AI brings
+                                both significant benefits and challenges.</button>
+                            <button class="q-opt" onclick="checkReading(this,1,2)">C. Job displacement is the biggest
+                                problem caused by AI.</button>
+                            <button class="q-opt" onclick="checkReading(this,1,3)">D. AI should be banned to protect
+                                human workers.</button>
+                        </div>
+                        <div class="q-explanation">✅ Jawaban B. Ide utama teks ini adalah perkembangan AI yang cepat
+                            membawa manfaat yang signifikan namun juga tantangan.</div>
+                    </div>
+                    <div class="question-block" data-quiz="1" data-correct="2">
+                        <div class="q-number">Pertanyaan 2</div>
+                        <div class="q-text">According to the text, how does AI help in healthcare?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,2,0)">A. By prescribing medication to
+                                patients.</button>
+                            <button class="q-opt" onclick="checkReading(this,2,1)">B. By performing complex surgeries
+                                automatically.</button>
+                            <button class="q-opt" onclick="checkReading(this,2,2)">C. By analyzing medical images to
+                                detect diseases early.</button>
+                            <button class="q-opt" onclick="checkReading(this,2,3)">D. By managing hospital records
+                                efficiently.</button>
+                        </div>
+                        <div class="q-explanation">? Jawaban C. Teks menyebutkan bahwa AI membantu menganalisis gambar
+                            medis untuk mendeteksi penyakit lebih awal (paragraf satu).</div>
+                    </div>
+                    <div class="question-block" data-quiz="1" data-correct="0">
+                        <div class="q-number">Pertanyaan 3</div>
+                        <div class="q-text">What is the author's tone in the last paragraph?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,3,0)">A. Objective and pragmatic</button>
+                            <button class="q-opt" onclick="checkReading(this,3,1)">B. Extremely pessimistic</button>
+                            <button class="q-opt" onclick="checkReading(this,3,2)">C. Sarcastic and mocking</button>
+                            <button class="q-opt" onclick="checkReading(this,3,3)">D. Overly enthusiastic</button>
+                        </div>
+                        <div class="q-explanation">✅ Jawaban A. Penulis bersikap objektif dan pragmatis, menyimpulkan
+                            bahwa meskipun ada masalah, AI akan terus berkembang dan regulasi diperlukan.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Artikel 2 — Climate Change Impacts -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📄</div>
+                    <div>
+                        <div class="card-title">Artikel 2: Global Climate Crisis</div>
+                        <div class="card-subtitle">Artikel tentang krisis lingkungan global</div>
+                    </div>
+                </div>
+                <div class="reading-passage">
+                    <span class="passage-tag medium">Medium</span>
+                    <div class="passage-title">Global Climate Crisis</div>
+                    <div class="passage-text">
+                        The impact of global climate change is becoming increasingly evident across the planet. Rising
+                        global temperatures have led to the rapid melting of polar ice caps, resulting in a dangerous
+                        rise in sea levels. Coastal cities worldwide are now facing the imminent <strong>threat</strong>
+                        of severe flooding and storm surges.<br><br>
+                        Beyond rising sea levels, climate change is causing more frequent and intense extreme weather
+                        events. For example, prolonged <strong>droughts</strong> are devastating agricultural yields in
+                        several regions, sparking fears of widespread food insecurity. Conversely, other areas are
+                        experiencing unprecedented rainfall leading to devastating landslides and urban
+                        flooding.<br><br>
+                        Environmental scientists stress that immediate and coordinated international action is required
+                        to cut greenhouse gas emissions. Transitioning to <strong>renewable energy</strong> sources,
+                        such as solar and wind power, is cited as a crucial step in mitigating further environmental
+                        degradation.
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge amber">Pertanyaan Pemahaman</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div id="quiz2">
+                    <div class="question-block" data-quiz="2" data-correct="1">
+                        <div class="q-number">Pertanyaan 1</div>
+                        <div class="q-text">What is a direct consequence of the melting polar ice caps according to the
+                            text?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,4,0)">A. Prolonged droughts</button>
+                            <button class="q-opt" onclick="checkReading(this,4,1)">B. A dangerous rise in sea
+                                levels</button>
+                            <button class="q-opt" onclick="checkReading(this,4,2)">C. More frequent earthquakes</button>
+                            <button class="q-opt" onclick="checkReading(this,4,3)">D. Increased greenhouse gas
+                                emissions</button>
+                        </div>
+                        <div class="q-explanation">✅ Jawaban B. Teks secara eksplisit menyebutkan "melting of polar ice
+                            caps, resulting in a dangerous rise in sea levels."</div>
+                    </div>
+                    <div class="question-block" data-quiz="2" data-correct="2">
+                        <div class="q-number">Pertanyaan 2</div>
+                        <div class="q-text">Based on the passage, what can be inferred about the impact of climate
+                            change on food supply?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,5,0)">A. It will increase global food
+                                production.</button>
+                            <button class="q-opt" onclick="checkReading(this,5,1)">B. It only affects crops in coastal
+                                areas.</button>
+                            <button class="q-opt" onclick="checkReading(this,5,2)">C. Food shortages may occur due to
+                                severe droughts.</button>
+                            <button class="q-opt" onclick="checkReading(this,5,3)">D. It forces farmers to use machinery
+                                more often.</button>
+                        </div>
+                        <div class="q-explanation">? Jawaban C. Teks menyebutkan bahwa kekeringan panjang merusak hasil
+                            pertanian, yang memicu "fears of widespread food insecurity."</div>
+                    </div>
+                    <div class="question-block" data-quiz="2" data-correct="3">
+                        <div class="q-number">Pertanyaan 3</div>
+                        <div class="q-text">What solution is highlighted by environmental scientists in the final
+                            paragraph?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,6,0)">A. Building higher walls around
+                                coastal cities.</button>
+                            <button class="q-opt" onclick="checkReading(this,6,1)">B. Relocating people from flood-prone
+                                areas.</button>
+                            <button class="q-opt" onclick="checkReading(this,6,2)">C. Increasing the production of
+                                fossil fuels.</button>
+                            <button class="q-opt" onclick="checkReading(this,6,3)">D. Switching to renewable energy
+                                sources.</button>
+                        </div>
+                        <div class="q-explanation">✅ Jawaban D. "Transitioning to renewable energy sources... is cited
+                            as a crucial step."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Artikel 3 — The Psychology of Social Media -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📄</div>
+                    <div>
+                        <div class="card-title">Artikel 3: The Psychology of Social Media</div>
+                        <div class="card-subtitle">Artikel tentang psikologi dunia maya</div>
+                    </div>
+                </div>
+                <div class="reading-passage">
+                    <span class="passage-tag medium">Medium</span>
+                    <div class="passage-title">The Psychology of Social Media</div>
+                    <div class="passage-text">
+                        Social media platforms have revolutionized how we communicate, yet their psychological impact
+                        remains a subject of intense debate. Design features such as infinite scrolling and notification
+                        badges are engineered to trigger the brain's reward system, releasing dopamine. This mechanism
+                        often leads to <strong>compulsive behavior</strong>, with users checking their devices
+                        incessantly.<br><br>
+                        Moreover, psychological studies highlight the negative correlation between heavy social media
+                        usage and mental well-being. The culture of <strong>curated reality</strong> online encourages
+                        detrimental social comparisons. Users frequently compare their behind-the-scenes struggles with
+                        the highlight reels of their peers, fostering feelings of inadequacy and anxiety.<br><br>
+                        However, it is vital to acknowledge the <strong>positive aspects</strong> as well. For
+                        marginalized groups and isolated individuals, these platforms provide crucial communities and
+                        support networks that might be unavailable locally. Therefore, managing social media
+                        consumption, rather than complete avoidance, is widely recommended by psychologists.
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge amber">Pertanyaan Pemahaman</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div id="quiz3">
+                    <div class="question-block" data-quiz="3" data-correct="0">
+                        <div class="q-number">Pertanyaan 1</div>
+                        <div class="q-text">Why do social media design features like infinite scrolling lead to
+                            compulsive behavior?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,7,0)">A. They trigger the brain's reward
+                                system by releasing dopamine.</button>
+                            <button class="q-opt" onclick="checkReading(this,7,1)">B. They provide users with useful
+                                daily information.</button>
+                            <button class="q-opt" onclick="checkReading(this,7,2)">C. They allow people to connect with
+                                local communities.</button>
+                            <button class="q-opt" onclick="checkReading(this,7,3)">D. They force users to compare
+                                themselves to others.</button>
+                        </div>
+                        <div class="q-explanation">✅ Jawaban A. Teks menyebutkan fitur tersebut "trigger the brain's
+                            reward system, releasing dopamine" yang memicu perilaku kompulsif.</div>
+                    </div>
+                    <div class="question-block" data-quiz="3" data-correct="1">
+                        <div class="q-number">Pertanyaan 2</div>
+                        <div class="q-text">What does the term "curated reality" in paragraph 2 most closely refer to?
+                        </div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,8,0)">A. Honest portrayals of daily life
+                                struggles.</button>
+                            <button class="q-opt" onclick="checkReading(this,8,1)">B. Carefully selected, positive
+                                representations of users' lives.</button>
+                            <button class="q-opt" onclick="checkReading(this,8,2)">C. Fake news spreading across
+                                different platforms.</button>
+                            <button class="q-opt" onclick="checkReading(this,8,3)">D. Professional photography
+                                businesses online.</button>
+                        </div>
+                        <div class="q-explanation">? Jawaban B. "Curated reality" atau realitas yang dikurasi merujuk
+                            pada kebiasaan pengguna yang hanya memposting bagian-bagian terbaik dari hidup mereka
+                            ("highlight reels").</div>
+                    </div>
+                    <div class="question-block" data-quiz="3" data-correct="2">
+                        <div class="q-number">Pertanyaan 3</div>
+                        <div class="q-text">What is the author's overall stance on social media usage?</div>
+                        <div class="q-options-list">
+                            <button class="q-opt" onclick="checkReading(this,9,0)">A. It should be entirely avoided due
+                                to its mental health risks.</button>
+                            <button class="q-opt" onclick="checkReading(this,9,1)">B. It is universally harmful and has
+                                no redeeming qualities.</button>
+                            <button class="q-opt" onclick="checkReading(this,9,2)">C. It has mixed effects, and
+                                controlled usage is the best approach.</button>
+                            <button class="q-opt" onclick="checkReading(this,9,3)">D. It is highly beneficial and
+                                everyone should use it constantly.</button>
+                        </div>
+                        <div class="q-explanation">✅ Jawaban C. Penulis menyoroti sisi negatif dan positif, lalu
+                            menyimpulkan "managing social media consumption... is widely recommended."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Tips Membaca -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div>
+                        <div class="card-title">Tips Membaca untuk SNBT</div>
+                        <div class="card-subtitle">Strategi menjawab soal reading comprehension</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Baca pertanyaan dulu.</strong> Sebelum membaca teks, lihat dulu
+                            pertanyaannya. Ini membuat otakmu "tahu apa yang dicari" saat membaca.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Jangan terjemahkan kata per kata.</strong> Fokus pada pemahaman
+                            umum. Kamu tidak perlu memahami setiap kata untuk menjawab pertanyaan.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Perhatikan kata kunci di pertanyaan.</strong> Who, what, when,
+                            where, why, how — kata-kata ini memberi petunjuk tentang informasi yang harus dicari.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Cari jawaban di teks, bukan dari asumsi.</strong> Jawaban yang
+                            benar selalu didukung oleh informasi yang ada di teks. Jangan menebak dari pengetahuan umum.
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Perhatikan sinonim.</strong> Jawaban di pilihan ganda sering
+                            menggunakan kata yang berbeda tapi artinya sama dengan yang ada di teks (parafrase).</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center; padding:40px">
+                <div style="font-size:2rem; margin-bottom:14px">📰</div>
+                <div class="card-title" style="margin-bottom:10px">Modul Reading Comprehension Menengah selesai!</div>
+                <p class="body-text" style="margin-bottom:0; max-width:480px; margin-left:auto; margin-right:auto">Kamu
+                    sudah berlatih membaca dan menganalisis artikel dengan kompleksitas menengah. Terus asah
+                    kemampuanmu!</p>
+                <div class="cta-row" style="justify-content:center; margin-top:24px">
+                    <a href="materi.html" class="btn-secondary">? Kembali ke Materi</a>
+                    <a href="materi.html" class="btn-primary">Modul Lainnya →</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '📚'; }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '📚' : '📚'; }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%'; });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target); } }); }, { threshold: 0.07 });
+        document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+
+        const correctAnswers = { 1: 1, 2: 2, 3: 0, 4: 1, 5: 2, 6: 3, 7: 0, 8: 1, 9: 2 };
+        const answered = {};
+
+        function checkReading(btn, qId, optIdx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            const block = btn.closest('.question-block');
+            const correct = correctAnswers[qId];
+            const opts = block.querySelectorAll('.q-opt');
+
+            if (optIdx === correct) {
+                btn.classList.add('correct-answer');
+            } else {
+                btn.classList.add('wrong-answer');
+                opts[correct].classList.add('correct-answer');
+            }
+
+            opts.forEach(o => { o.style.pointerEvents = 'none'; });
+            block.querySelector('.q-explanation').classList.add('show');
+        }
+    </script>
+</body>
+
+</html>
